@@ -35,7 +35,6 @@ void CalculateSum() {
     printf("Сумма: %d\n", sum);
 }
 
-// Функция: ввод двух чисел сразу, проверка и операции
 void CalculateOperationsMultiplicationRemainder() {
     int numberA, numberB;
 
