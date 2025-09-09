@@ -4,7 +4,8 @@ int main() {
     FILE *input = fopen("input.txt", "r");
     FILE *output = fopen("output.txt", "w");
     
-    if (input == NULL || output == NULL) {
+    if (input == NULL || output == NULL) 
+    {
         return 1;
     }
     
