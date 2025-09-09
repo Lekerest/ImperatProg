@@ -26,7 +26,7 @@ int main() {
         return 1;
     }
 
-    if (b != 0)
+    if (a / b != 0)
     {
         int floor_div = (int)floor((double)a / b);
         int ceil_div = (int)ceil((double)a / b);
