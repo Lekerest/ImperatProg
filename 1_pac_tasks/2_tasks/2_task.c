@@ -21,8 +21,7 @@ int main() {
         } 
         else if (arr[i] <= 0)
         {
-            int *ptr = &arr[i];
-            int index = ptr - arr + 1;
+            int index = i + 1;
             fprintf(output, "%d ", -index);
             return 0;
 
