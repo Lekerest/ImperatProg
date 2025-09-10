@@ -1,12 +1,5 @@
-// Monday - M 6
-// Tuesday - Tu 7
-// Wednesday - W 9
-// Thursday - Th 8
-// Friday - F 6
-// Saturday - Sa 8
-// Sunday - Su 6
-
 #include <stdio.h>
+#include <string.h>
 
 int main() {
     FILE *input = fopen("input.txt", "r");
@@ -16,24 +9,33 @@ int main() {
         return 1;
     }
 
+    char *days[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
     char inputstr[10];
     fscanf(input, "%s", &inputstr);
 
-    int sizestr = sizeof(inputstr);
+    int count = 0;
+    int index = -1;
+    for (int i = 0; i < 7; i++) 
+    {
+        if (strncmp(inputstr, days[i], strlen(inputstr)) == 0) 
+        {
+            count++;
+            index = i;  
+        }
+    }
 
-    
-    // int arr[10];
-        
-    //     for (int i = 0; i < 3; i++) 
-    //     {
-    //         if (fscanf(input, "%d", &arr[i]) != 1)
-    //         {
-    //             fclose(input);
-    //             fclose(output);
-    //             return 1;
-    
-    
-    fprintf(output, "%d", sizestr);
+    if (count == 0) 
+    {
+        fprintf(output, "Invalid");
+    } 
+    else if (count > 1) 
+    {
+        fprintf(output, "Ambiguous");
+    } else 
+    {
+        fprintf(output, "%d", index + 1);
+    }
     
     fclose(input);
     fclose(output);
