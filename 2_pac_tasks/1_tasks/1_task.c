@@ -12,7 +12,7 @@ int main() {
     char *days[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 
     char inputstr[10];
-    fscanf(input, "%s", &inputstr);
+    fscanf(input, "%9s", inputstr);
 
     int count = 0;
     int index = -1;
