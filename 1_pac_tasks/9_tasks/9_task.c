@@ -10,7 +10,7 @@ int main() {
     fscanf(input, "%lld", &N);
     
     ll count = 0;
-    
+    ll max_c;
     // Перебираем первую сторону (самую маленькую)
     for (ll a = 1; a * a * a <= N; a++) {
         
@@ -18,7 +18,7 @@ int main() {
         for (ll b = a; a * b * b <= N; b++) {
             
             // Для данных a и b находим максимальную третью сторону
-            ll max_c = N / (a * b);
+            max_c = N / (a * b);
             
             // Убеждаемся, что c ≥ b (чтобы сохранить порядок a ≤ b ≤ c)
             if (max_c < b) continue;

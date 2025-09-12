@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 
 _Bool is_prime(int n) 
 {
