@@ -1,60 +1,39 @@
 #include <stdio.h>
-#include <string.h>
 
-int count_nines(double num) {
-    char str[50];
-    sprintf(str, "%.2f", num);
-    
-    int count = 0;
-    for (int j = 0; str[j] != '\0'; j++) {
-        if (str[j] == '9') {
-            count++;
-        }
+int count_nines(long long x) {
+    int cnt = 0;
+    while (x > 0) {
+        if (x % 10 == 9) cnt++;
+        x /= 10;
     }
-    return count;
+    return cnt;
 }
 
 int main() {
     FILE *input = fopen("input.txt", "r");
     FILE *output = fopen("output.txt", "w");
-    
-    if (input == NULL || output == NULL) 
-    {
-        return 1;
-    }
-    
-    int n;
-    if (fscanf(input, "%d", &n) != 1) 
-    {
-        fclose(input);
-        fclose(output);
-        return 1;
-    }
-    
-    int additional_seven = 0;
+    if (input == NULL || output == NULL) return 1;
 
-    for (int i = 0; i < n; i++) 
-    {
-        double number;
-        if (fscanf(input, "%lf", &number) != 1) {
-            fclose(input);
-            fclose(output);
-            return 1;
-        }
-        
-        int nines_before = count_nines(number);
-        
-        number -= 0.01;
-        
-        int nines_after = count_nines(number);
-        
-        additional_seven += (nines_after - nines_before);
+    int n;
+    fscanf(input, "%d", &n);
+
+    int result = 0;
+    for (int i = 0; i < n; i++) {
+        int price;
+        fscanf(input, "%d", &price);
+
+        long long before = (long long)price * 100;
+        long long after = before - 1;
+
+        int n1 = count_nines(before);
+        int n2 = count_nines(after);
+
+        result += (n2 - n1);
     }
-    
-    fprintf(output, "%d", additional_seven);
-    
+
+    fprintf(output, "%d", result);
+
     fclose(input);
     fclose(output);
-    
     return 0;
 }
