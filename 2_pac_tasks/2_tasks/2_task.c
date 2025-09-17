@@ -1,22 +1,20 @@
 #include <stdio.h>
-#include <string.h>
 
-int hexCharToInt(char ch) 
+int HexCharToInt(char ch) 
 {
-    if (ch >= '0' && ch <= '9') return ch - '0';
-    if (ch >= 'A' && ch <= 'F') return ch - 'A' + 10;
-    if (ch >= 'a' && ch <= 'f') return ch - 'a' + 10;
+    if (ch >= '0' && ch <= '9') 
+    {
+        return ch - '0';
+    }
+    if (ch >= 'A' && ch <= 'F') 
+    {
+        return ch - 'A' + 10;
+    }
+    if (ch >= 'a' && ch <= 'f') 
+    {
+        return ch - 'a' + 10;
+    }
     return -1;
-}
-
-int hexStringToInt(char str[3]) 
-{
-    int first = hexCharToInt(str[0]);
-    int second  = hexCharToInt(str[1]);
-    
-    if (first == -1 || second == -1) return -1;
-    
-    return first * 16 + second;
 }
 
 int main() 
@@ -24,31 +22,60 @@ int main()
     FILE *input = fopen("input.txt", "r");
     FILE *output = fopen("output.txt", "w");
     
-    if (input == NULL || output == NULL) {
+    if (input == NULL || output == NULL) 
+    {
         return 1;
     }
 
-    char inputstr[7];
-    fscanf(input, "%6s", inputstr);
+    char hex[7];
+    fscanf(input, "%6s", hex);
 
-    char colorA[3], colorB[3], colorC[3];
+    int r1 = HexCharToInt(hex[0]);
+    int r2 = HexCharToInt(hex[1]);
+    
+    int red;
+    if (r1 == -1 || r2 == -1) 
+    {
+        red = -1;
+    } 
+    else 
+    {
+        red = r1 * 16 + r2;
+    }
 
-    strncpy(colorA, inputstr + 0, 2);
-    colorA[2] = '\0';
-    int valueA = hexStringToInt(colorA);
+    int g1 = HexCharToInt(hex[2]);
+    int g2 = HexCharToInt(hex[3]);
 
-    strncpy(colorB, inputstr + 2, 2);
-    colorB[2] = '\0';
-    int valueB = hexStringToInt(colorB);
+    int green;
+    if (g1 == -1 || g2 == -1) 
+    {
+        green = -1;
+    } 
+    else 
+    {
+        green = g1 * 16 + g2;
+    }
 
-    strncpy(colorC, inputstr + 4, 2);
-    colorC[2] = '\0';
-    int valueC = hexStringToInt(colorC);
+    int b1 = HexCharToInt(hex[4]);
+    int b2 = HexCharToInt(hex[5]);
 
-    if (valueA == -1 || valueB == -1 || valueC == -1) {
+    int blue;
+    if (b1 == -1 || b2 == -1) 
+    {
+        blue = -1;
+    } 
+    else 
+    {
+        blue = b1 * 16 + b2;
+    }
+
+    if (red == -1 || green == -1 || blue == -1) 
+    {
         fprintf(output, "%d %d %d", -1, -1, -1);
-    } else {
-        fprintf(output, "%d %d %d", valueA, valueB, valueC);
+    } 
+    else 
+    {
+        fprintf(output, "%d %d %d", red, green, blue);
     }
 
     fclose(input);

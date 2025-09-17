@@ -12,7 +12,6 @@ int main()
 
     int count_number;
     if (fscanf(input, "%d", &count_number) != 1) {
-        fprintf(stderr, "Ошибка чтения количества чисел\n");
         fclose(input);
         fclose(output);
         return 1;
@@ -26,7 +25,6 @@ int main()
     {
         int a;
         if (fscanf(input, "%d", &a) != 1) {
-            fprintf(stderr, "Ошибка чтения числа на позиции %d\n", i + 1);
             fclose(input);
             fclose(output);
             return 1;
@@ -41,11 +39,7 @@ int main()
     double negative = (double)count_negative / count_number;
     double zero = (double)count_zero / count_number;
 
-    fprintf(output, "%0.5lf %0.5lf %0.5lf",
-            ((long)(negative * 100000)) / 100000.0,
-            ((long)(zero * 100000)) / 100000.0,
-            ((long)(positive * 100000)) / 100000.0);
-
+    fprintf(output, "%0.5lf %0.5lf %0.5lf\n", negative, zero, positive);
 
     fclose(input);
     fclose(output);

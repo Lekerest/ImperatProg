@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <string.h>
 
 int main() {
     FILE *input = fopen("input.txt", "r");
@@ -9,36 +8,48 @@ int main() {
         return 1;
     }
 
+    char s[11];
+    fscanf(input, "%10s", s);
+
+    int length = 0;
+    while (s[length] != '\0') {
+        length++;
+    }
+
+    int possible[7] = {1, 1, 1, 1, 1, 1, 1};
+    int count = 7;
+
+    // Проверяем каждый день недели
     char *days[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-
-    char inputstr[10];
-    fscanf(input, "%9s", inputstr);
-
-    int count = 0;
-    int index = -1;
-    for (int i = 0; i < 7; i++) 
-    {
-        if (strncmp(inputstr, days[i], strlen(inputstr)) == 0) 
-        {
-            count++;
-            index = i;  
+    
+    for (int i = 0; i < 7; i++) {
+        int match = 1;
+        for (int j = 0; j < length; j++) {
+            if (s[j] != days[i][j]) {
+                match = 0;
+                break;
+            }
+        }
+        if (!match) {
+            possible[i] = 0;
+            count--;
         }
     }
 
-    if (count == 0) 
-    {
+    if (count == 0) {
         fprintf(output, "Invalid");
-    } 
-    else if (count > 1) 
-    {
+    } else if (count > 1) {
         fprintf(output, "Ambiguous");
-    } else 
-    {
-        fprintf(output, "%d", index + 1);
+    } else {
+        for (int i = 0; i < 7; i++) {
+            if (possible[i]) {
+                fprintf(output, "%d", i + 1);
+                break;
+            }
+        }
     }
-    
+
     fclose(input);
     fclose(output);
-    
     return 0;
 }
