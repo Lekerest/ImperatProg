@@ -22,14 +22,20 @@ int main() {
 
     for (int step = 1; step <= max_range - min_range; step++) 
     {
-        for (int buf_min_range = min_range; buf_min_range <= max_range; buf_min_range++) 
+        // Для каждого шага проверяем все стартовые позиции
+        for (int start = min_range; start <= max_range; start++) 
         {
-            int first_in_range = buf_min_range;
+            // Вычисляем последний элемент прогрессии
+            int last = start + step * (need_count_number - 1);
             
-            int last_in_range = first_in_range + step * (need_count_number - 1);
-            if (last_in_range > max_range) continue;
+            // Пропускаем если последний элемент выходит за границы
+            if (last > max_range) continue;
             
-            if (last_in_range + step <= max_range) continue;
+            // Проверяем что элемент перед первым не в диапазоне
+            if (start - step >= min_range) continue;
+            
+            // Проверяем что элемент после последнего не в диапазоне
+            if (last + step <= max_range) continue;
             
             count_progress++;
         }
