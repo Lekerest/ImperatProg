@@ -19,7 +19,6 @@ int main() {
     int possible[7] = {1, 1, 1, 1, 1, 1, 1};
     int count = 7;
 
-    // Проверяем каждый день недели
     char *days[] = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
     
     for (int i = 0; i < 7; i++) {

@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <string.h>
-#include <math.h>
 
 int main() {
     FILE *input = fopen("input.txt", "r");
@@ -11,32 +9,30 @@ int main() {
         return 1;
     }
 
-    int n;
-    fscanf(input, "%d", &n);
+    int length;
+    fscanf(input, "%d", &length);
 
-    char inputstr[n + 1];
+    char inputstr[length+1];
     fscanf(input, "%s", inputstr);
 
-    int count = 0;
-    char movestr[9];
-    int length = strlen(inputstr);
     int is_first = 1;
+    int position = 0;
 
-    while (length >= 8)
+    while (length - position >= 8)
     {
-        strncpy(movestr, inputstr + (count * 8), 8);  
-        movestr[8] = '\0';
-        
         int result = 0;
-        for(int i = 0; i < 8; i++)
+        int power = 1;
+        
+        for (int i = 0; i < 8; i++) 
         {
-            if(movestr[i] == '1')
+            if (inputstr[position + i] == '1') 
             {
-                result += pow(2, i);
+                result += power;
             }
+            power *= 2;
         }
         
-        if (is_first == 1) 
+        if (is_first) 
         {
             fprintf(output, "%d", result);
             is_first = 0;
@@ -46,29 +42,24 @@ int main() {
             fprintf(output, " %d", result);
         }
         
-        count++;
-        length -= 8;
+        position += 8;
     }
 
-    int result = 0;
-    int cnt = 0;
-    for(int i = count * 8; inputstr[i] != '\0'; i++)
+    if (position < length) 
     {
-        if(inputstr[i] == '1')
-        {
-            result += pow(2, cnt);
-        }   
-        cnt++;
-    }
-    
-    if (cnt > 0) 
-    {
-        if (is_first == 1) 
-        {
+        int result = 0;
+        int power = 1;
+        
+        for (int i = position; i < length; i++) {
+            if (inputstr[i] == '1') {
+                result += power;
+            }
+            power *= 2;
+        }
+        
+        if (is_first) {
             fprintf(output, "%d", result);
-        } 
-        else 
-        {
+        } else {
             fprintf(output, " %d", result);
         }
     }
