@@ -1,1 +1,11 @@
-.vscode/
+*
+/*
+/.vscode
+
+!/main.c
+
+!/queue/
+!/queue/**
+
+!/*_pac_tasks/
+!/*_pac_tasks/**
