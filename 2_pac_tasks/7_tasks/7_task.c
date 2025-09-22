@@ -1,5 +1,27 @@
 #include <stdio.h>
 
+void print_in_base(FILE *out, long long number, int base)
+{
+    if (number == 0)
+    {
+        return;
+    }
+
+    int remainder = number % base;
+    number = number / base;
+
+    print_in_base(out, number, base);
+
+    if (remainder < 10)
+    {
+        fprintf(out, "%c", remainder + '0');
+    }
+    else
+    {
+        fprintf(out, "%c", remainder - 10 + 'a');
+    }
+}
+
 int main() 
 {
     FILE *input_file = fopen("input.txt", "r");
@@ -11,82 +33,49 @@ int main()
     }
 
     int source_base, target_base;
-    char number_string[100];
-    
-    fscanf(input_file, "%d %d %s", &source_base, &target_base, number_string);
-    
+    fscanf(input_file, "%d %d", &source_base, &target_base);
+
     long long decimal_number = 0;
-    int current_position = 0;
-    
-    // Перевод из исходной системы в десятичную
-    while (number_string[current_position] != '\0') 
+    char ch;
+
+    // читаем число посимвольно
+    while (fscanf(input_file, " %c", &ch) == 1) 
     {
         int digit_value;
-        char current_char = number_string[current_position];
-        
-        if (current_char >= '0' && current_char <= '9') 
+
+        if (ch >= '0' && ch <= '9') 
         {
-            digit_value = current_char - '0';
+            digit_value = ch - '0';
         } 
-        else if (current_char >= 'a' && current_char <= 'z') 
+        else if (ch >= 'a' && ch <= 'z') 
         {
-            digit_value = current_char - 'a' + 10;
+            digit_value = ch - 'a' + 10;
         }
-        else if (current_char >= 'A' && current_char <= 'Z') 
+        else if (ch >= 'A' && ch <= 'Z') 
         {
-            digit_value = current_char - 'A' + 10;
+            digit_value = ch - 'A' + 10;
         }
         else 
         {
-            // Некорректный символ
             fclose(input_file);
             fclose(output_file);
-            return 1;
+            return 1; // некорректный символ
         }
 
         decimal_number = decimal_number * source_base + digit_value;
-        current_position++;
     }
-    
-    // Обработка случая, когда число равно 0
+
+    // случай числа 0
     if (decimal_number == 0) 
     {
         fprintf(output_file, "0");
-        fclose(input_file);
-        fclose(output_file);
-        return 0;
-    }
-    
-    // Перевод из десятичной системы в целевую
-    char result[100];
-    int result_index = 0;
-    long long temp_number = decimal_number;
-    
-    while (temp_number > 0) 
+    } 
+    else 
     {
-        int remainder = temp_number % target_base;
-        temp_number = temp_number / target_base;
-        
-        // Используем строчные буквы как указано в ТЗ
-        if (remainder < 10) 
-        {
-            result[result_index] = remainder + '0';
-        } 
-        else 
-        {
-            result[result_index] = remainder - 10 + 'a';  // строчные буквы!
-        }
-        result_index++;
-    }
-    
-    // Выводим результат в обратном порядке
-    for (int i = result_index - 1; i >= 0; i--) 
-    {
-        fprintf(output_file, "%c", result[i]);
+        print_in_base(output_file, decimal_number, target_base);
     }
 
     fclose(input_file);
     fclose(output_file);
-    
     return 0;
 }

@@ -12,60 +12,55 @@ int main() {
     int length;
     fscanf(input, "%d", &length);
 
-    char inputstr[length+1];
-    fscanf(input, "%s", inputstr);
-
+    int count = 0;
+    int power = 1;
+    int result = 0;
     int is_first = 1;
-    int position = 0;
 
-    while (length - position >= 8)
+    for (int i = 0; i < length; i++) 
     {
-        int result = 0;
-        int power = 1;
-        
-        for (int i = 0; i < 8; i++) 
+        char c;
+        fscanf(input, " %c", &c);
+
+        if (c == '1') 
         {
-            if (inputstr[position + i] == '1') 
-            {
-                result += power;
-            }
-            power *= 2;
+            result += power;
         }
-        
+        power *= 2;
+        count++;
+
+        if (count == 8) 
+        {
+            if (is_first) 
+            {
+                fprintf(output, "%d", result);
+                is_first = 0;
+            } 
+            else 
+            {
+                fprintf(output, " %d", result);
+            }
+
+            count = 0;
+            power = 1;
+            result = 0;
+        }
+    }
+
+    // если осталось
+    if (count > 0) 
+    {
         if (is_first) 
         {
             fprintf(output, "%d", result);
-            is_first = 0;
         } 
         else 
         {
-            fprintf(output, " %d", result);
-        }
-        
-        position += 8;
-    }
-
-    if (position < length) 
-    {
-        int result = 0;
-        int power = 1;
-        
-        for (int i = position; i < length; i++) {
-            if (inputstr[i] == '1') {
-                result += power;
-            }
-            power *= 2;
-        }
-        
-        if (is_first) {
-            fprintf(output, "%d", result);
-        } else {
             fprintf(output, " %d", result);
         }
     }
 
     fclose(input);
     fclose(output);
-    
     return 0;
 }
