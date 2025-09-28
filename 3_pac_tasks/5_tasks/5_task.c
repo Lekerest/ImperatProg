@@ -10,63 +10,64 @@ int main(void)
         return 1;
     }
 
-    int N, M;
-    if (fscanf(input, "%d %d", &N, &M) != 2)
+    int N, M, i;
+    fscanf(input, "%d %d", &N, &M);
+
+    int value[N + 1]; // value[x] = y, если x -> y
+    int used[N + 1];  // для проверки инъекции
+    int y_count[N + 1]; // для проверки сюръекции
+
+    for (i = 1; i <= N; i++)
     {
-        fclose(input);
-        fclose(output);
-        return 1;
+        value[i] = 0;   // 0 = ещё не задано
+        used[i] = 0;
+        y_count[i] = 0;
     }
 
-    // массив значений функции (f[x] = y, если определено; иначе 0)
-    int f[N + 1];
-    for (int i = 1; i <= N; i++)
-    {
-        f[i] = 0;
-    }
-
-    int values[M];      // список значений (y)
-    int values_count = 0;
+    int x, y;
     int is_function = 1;
 
-    for (int i = 0; i < M; i++)
+    for (i = 0; i < M; i++)
     {
-        int x, y;
         fscanf(input, "%d %d", &x, &y);
 
-        if (f[x] == 0)
+        if (value[x] == 0)
         {
-            f[x] = y;
-            values[values_count++] = y;
+            value[x] = y;
         }
         else
         {
-            if (f[x] != y)
+            if (value[x] != y)
             {
-                is_function = 0; // неоднозначность
+                is_function = 0;
             }
         }
+
+        y_count[y]++;
     }
 
     if (!is_function)
     {
-        fprintf(output, 0);
+        fprintf(output, "0\n");
         fclose(input);
         fclose(output);
         return 0;
     }
 
-    int result[6];
-    int rcount = 0;
-
-    // 1) функция
-    result[rcount++] = 1;
-
-    // 2) всюду определённая
-    int everywhere_defined = 1;
-    for (int i = 1; i <= N; i++)
+    int result[5];
+    for (i = 0; i < 5; i++)
     {
-        if (f[i] == 0)
+        result[i] = 0;
+    }
+
+    // 1. Функция
+    result[0] = 1;
+
+    // 2. Всюду определённая функция
+    int everywhere_defined = 1;
+    for (i = 1; i <= N; i++)
+    {
+        if (value[i] == 0)
         {
             everywhere_defined = 0;
             break;
@@ -74,41 +75,29 @@ int main(void)
     }
     if (everywhere_defined)
     {
-        result[rcount++] = 2;
+        result[1] = 2;
     }
 
-    // 3) инъективная
+    // 3. Инъекция
     int injective = 1;
-    for (int i = 0; i < values_count && injective; i++)
+    for (i = 1; i <= N; i++)
     {
-        for (int j = i + 1; j < values_count; j++)
+        if (y_count[i] > 1)
         {
-            if (values[i] == values[j])
-            {
-                injective = 0;
-                break;
-            }
+            injective = 0;
+            break;
         }
     }
     if (injective)
     {
-        result[rcount++] = 3;
+        result[2] = 3;
     }
 
-    // 4) сюръективная
+    // 4. Сюръекция
     int surjective = 1;
-    for (int u = 1; u <= N; u++)
+    for (i = 1; i <= N; i++)
     {
-        int found = 0;
-        for (int i = 0; i < values_count; i++)
-        {
-            if (values[i] == u)
-            {
-                found = 1;
-                break;
-            }
-        }
-        if (!found)
+        if (y_count[i] == 0)
         {
             surjective = 0;
             break;
@@ -116,24 +105,29 @@ int main(void)
     }
     if (surjective)
     {
-        result[rcount++] = 4;
+        result[3] = 4;
     }
 
-    // 5) биективная
+    // 5. Биекция
     if (injective && surjective)
     {
-        result[rcount++] = 5;
+        result[4] = 5;
     }
 
-    // вывод результата
-    for (int i = 0; i < rcount; i++)
+    int first = 1;
+    for (i = 0; i < 5; i++)
     {
-        if (i > 0)
+        if (result[i] != 0)
         {
-            fprintf(output, " ");
+            if (!first)
+            {
+                fprintf(output, " ");
+            }
+            fprintf(output, "%d", result[i]);
+            first = 0;
         }
-        fprintf(output, "%d", result[i]);
     }
+    fprintf(output, "\n");
 
     fclose(input);
     fclose(output);
