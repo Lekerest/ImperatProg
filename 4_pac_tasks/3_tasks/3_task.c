@@ -1,53 +1,52 @@
 #include <stdio.h>
-#include <stdlib.h>
 
-char *concat(char *pref, char *suff) {
+char *concat(char *pref, char *suff) 
+{
     // Находим конец pref
-    while (*pref) {
+    while (*pref != '\0') 
+    {
         pref++;
     }
+
     // Копируем suff в конец pref
-    while (*suff) {
+    while (*suff != '\0') 
+    {
         *pref = *suff;
         pref++;
         suff++;
+
     }
-    // Завершающий нулевой символ
+
     *pref = '\0';
-    return pref; // указатель на '\0'
+    return pref;
 }
 
-int main() {
-    FILE *fin = fopen("input.txt", "r");
-    FILE *fout = fopen("output.txt", "w");
+int main() 
+{
+    FILE *input = fopen("input.txt", "r");
+    FILE *output = fopen("output.txt", "w");
 
-    if (!fin || !fout) {
+    if (!input || !output)
+    {
         return 1;
     }
 
     int N;
-    fscanf(fin, "%d", &N);
+    fscanf(input, "%d", &N);
+    char result[N * 101];
+    result[0] = '\0';
 
-    // Выделяем достаточно большой буфер
-    // Макс. N=10000, длина строки ≤100 → 1 000 000 символов
-    char *result = (char *)malloc(1100000 * sizeof(char));
-    if (!result) {
-        return 1;
-    }
+    char buffer[101];
 
-    result[0] = '\0'; // изначально пустая строка
-
-    char buffer[128]; // буфер для чтения строк (100 символов + запас)
-
-    for (int i = 0; i < N; i++) {
-        fscanf(fin, "%s", buffer);
+    for (int i = 0; i < N; i++) 
+    {
+        fscanf(input, "%s", buffer);
         concat(result, buffer);
     }
 
-    fprintf(fout, "%s\n", result);
+    fprintf(output, "%s", result);
 
-    free(result);
-    fclose(fin);
-    fclose(fout);
+    fclose(input);
+    fclose(output);
     return 0;
 }
