@@ -36,7 +36,7 @@ int main() {
             }
             is++;
         }
-        res_arr[i] = count++;
+        res_arr[i] = count;
         count = 0;
     }
 
