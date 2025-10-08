@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <math.h>
-#include <windows.h>
 
 // Функция: выводит приветственное сообщение
 void PrintHello() {
@@ -122,7 +121,6 @@ void SummaNaturalNumbers() {
 }
 
 int main() {
-    SetConsoleOutputCP(CP_UTF8);
     PrintHello();
     CalculateSum();
     CalculateOperationsMultiplicationRemainder();
