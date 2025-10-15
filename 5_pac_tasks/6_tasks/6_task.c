@@ -8,7 +8,7 @@ int main(void)
     int N;
     fscanf(input, "%d", &N);
 
-    int digits[3000] = {1}; // начальное число 1
+    int digits[3000] = {1};
     int len = 1;
 
     for (int i = 2; i <= N; i++)
