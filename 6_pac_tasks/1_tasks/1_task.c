@@ -4,7 +4,11 @@
 int is_little_endian(void)
 {
     unsigned short test = 0x1;
+    // Пример: 0x0001
+	// Little-endian: 01 00
+	// Big-endian: 00 01
     return *((unsigned char *)&test) == 0x1;
+    // 1 le 0 be
 }
 
 // функция перестановки байт
@@ -60,6 +64,10 @@ int main(void)
     }
 
     fwrite(&result, 4, 1, output);
+    // ptr - Указатель на область памяти, откуда берутся данные для записи
+    // size - Размер одного элемента (в байтах)
+    // count - Количество таких элементов
+    // stream - Указатель на файловый поток (открытый через fopen)
 
     fclose(input);
     fclose(output);
