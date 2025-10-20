@@ -21,11 +21,6 @@ int main(void)
     FILE *input = fopen("input.txt", "rb");
     FILE *output = fopen("output.txt", "wb");
 
-    if (!input || !output)
-    {
-        return 1;
-    }
-
     unsigned int N;
     fread(&N, 4, 1, input);
 
@@ -36,16 +31,10 @@ int main(void)
     {
         file_little_endian = is_little_endian();
     }
-    else if (N_swapped >= 1 && N_swapped <= 10000)
+    else
     {
         N = N_swapped;
         file_little_endian = !is_little_endian();
-    }
-    else
-    {
-        fclose(input);
-        fclose(output);
-        return 1;
     }
 
     int sum = 0;
