@@ -25,7 +25,8 @@ int main() {
         (c4=='d' || c4=='\0') &&
         (c5=='a' || c5=='\0') &&
         (c6=='y' || c6=='\0') &&
-        (c7=='\0')) {
+        (c7=='\0')) 
+    {
         count++; result = 1;
     }
 
@@ -104,11 +105,15 @@ int main() {
     }
 
     // Результат 
-    if (count == 0) {
+    if (count == 0) 
+    {
         fprintf(output, "Invalid");
-    } else if (count > 1) {
+    } 
+    else if (count > 1) 
+    {
         fprintf(output, "Ambiguous");
-    } else {
+    } else 
+    {
         fprintf(output, "%d", result);
     }
 

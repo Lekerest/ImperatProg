@@ -35,6 +35,7 @@ int main()
     int source_base, target_base;
     fscanf(input_file, "%d %d", &source_base, &target_base);
 
+    // инт - 2 147 483 647
     long long decimal_number = 0;
     char ch;
 

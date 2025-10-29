@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <windows.h>  // для установки кодировки консоли в UTF-8
+// #include <windows.h>  // для установки кодировки консоли в UTF-8
 
 #define MAX_PEOPLE 25
 #define MAX_LEN 100
@@ -24,7 +24,7 @@ int main() {
     int count = 0;
 
     // переводим консоль в UTF-8
-    SetConsoleOutputCP(CP_UTF8);
+    //SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 
     // читаем inputname.txt
