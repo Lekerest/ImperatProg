@@ -18,11 +18,6 @@ int main(void)
     FILE *input = fopen("input.txt", "r");
     FILE *output = fopen("output.txt", "w");
 
-    if (!input || !output)
-    {
-        return 1;
-    }
-
     int count_number_first, count_number_second, i, j;
 
     fscanf(input, "%d", &count_number_first);
