@@ -5,11 +5,6 @@ int main(void)
     FILE *input = fopen("input.txt", "r");
     FILE *output = fopen("output.txt", "w");
 
-    if (input == NULL || output == NULL)
-    {
-        return 1;
-    }
-
     int n;
     fscanf(input, "%d", &n);
 
@@ -30,7 +25,6 @@ int main(void)
         - потому что знаки чередуются
         берем старое значение term и добавлем к нему новое
         term * x^2 сдвиг так как каждый следующий член больше
-            ------
 
             ---Знаменатель---
         Деление на нужный факториал

@@ -16,11 +16,6 @@ int main(void)
     FILE *input = fopen("input.txt", "r");
     FILE *output = fopen("output.txt", "w");
 
-    if (!input || !output)
-    {
-        return 0;
-    }
-
     int T;
     fscanf(input, "%d", &T);
 
