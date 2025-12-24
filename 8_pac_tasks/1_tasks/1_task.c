@@ -22,12 +22,6 @@ int main(void)
     FILE *input = fopen("input.txt", "r");
     FILE *output = fopen("output.txt", "w");
 
-    // Проверка успешного открытия файлов
-    if (!input || !output)
-    {
-        return 1;
-    }
-
     int requestCount; // Общее количество запросов
     fscanf(input, "%d", &requestCount); // Читаем количество запросов из файла
 

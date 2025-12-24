@@ -1,126 +1,82 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-struct Record
+
+
+typedef struct
 {
-    long long key;
-    char value[8];
-    int original_index;
-};
+    int key;
+    char val[8];
+    int orig_index;
+} Record;
 
-void merge
-(
-    struct Record *array,
-    struct Record *buffer,
-    int left,
-    int middle,
-    int right
-)
+
+
+// ---------- ФУНКЦИЯ СРАВНЕНИЯ ДЛЯ QSORT ----------
+// Сортируем сначала по key по возрастанию.
+// Если ключи равны, сортируем по orig_index, чтобы сохранить исходный порядок
+// (то есть делаем сортировку стабильной вручную).
+static int compare_records(const void *a, const void *b)
 {
-    int i = left;
-    int j = middle;
-    int k = left;
+    const Record *first = (const Record *)a;
+    const Record *second = (const Record *)b;
 
-    while (i < middle && j < right)
+    if (first->key != second->key)
     {
-        if (array[i].key < array[j].key)
-        {
-            buffer[k] = array[i];
-            i++;
-            k++;
-        }
-        else if (array[i].key > array[j].key)
-        {
-            buffer[k] = array[j];
-            j++;
-            k++;
-        }
-        else
-        {
-            if (array[i].original_index < array[j].original_index)
-            {
-                buffer[k] = array[i];
-                i++;
-                k++;
-            }
-            else
-            {
-                buffer[k] = array[j];
-                j++;
-                k++;
-            }
-        }
+        return first->key - second->key;
     }
 
-    while (i < middle)
-    {
-        buffer[k] = array[i];
-        i++;
-        k++;
-    }
-
-    while (j < right)
-    {
-        buffer[k] = array[j];
-        j++;
-        k++;
-    }
-
-    for (int t = left; t < right; t++)
-    {
-        array[t] = buffer[t];
-    }
+    return first->orig_index - second->orig_index;
 }
 
-void merge_sort
-(
-    struct Record *array,
-    struct Record *buffer,
-    int left,
-    int right
-)
+
+
+int main(void)
 {
-    if (right - left <= 1)
+    FILE *input = fopen("input.txt", "r");
+    FILE *output = fopen("output.txt", "w");
+
+
+
+    // ---------- ЧТЕНИЕ КОЛИЧЕСТВА ЗАПИСЕЙ ----------
+    int record_count;
+    fscanf(input, "%d", &record_count);
+
+
+
+    // ---------- ВЫДЕЛЕНИЕ ПАМЯТИ ПОД МАССИВ ЗАПИСЕЙ ----------
+    Record *records = (Record *)malloc(record_count * sizeof(Record));
+
+
+
+    // ---------- ЧТЕНИЕ ЗАПИСЕЙ И СОХРАНЕНИЕ ИСХОДНОГО ПОРЯДКА ----------
+    for (int i = 0; i < record_count; i++)
     {
-        return;
+        fscanf(input, "%d %7s", &records[i].key, records[i].val);
+
+        records[i].orig_index = i;
     }
 
-    int middle = (left + right) / 2;
 
-    merge_sort(array, buffer, left, middle);
-    merge_sort(array, buffer, middle, right);
 
-    merge(array, buffer, left, middle, right);
-}
+    // ---------- СОРТИРОВКА ----------
+    qsort(records, record_count, sizeof(Record), compare_records);
 
-int main()
-{
-    int N;
 
-    if (scanf("%d", &N) != 1)
+
+    // ---------- ВЫВОД ОТСОРТИРОВАННЫХ ДАННЫХ ----------
+    for (int i = 0; i < record_count; i++)
     {
-        return 0;
+        fprintf(output, "%d %s\n", records[i].key, records[i].val);
     }
 
-    struct Record *array = (struct Record *)malloc(sizeof(struct Record) * N);
-    struct Record *buffer = (struct Record *)malloc(sizeof(struct Record) * N);
 
-    for (int i = 0; i < N; i++)
-    {
-        scanf("%lld %7s", &array[i].key, array[i].value);
-        array[i].original_index = i;
-    }
 
-    merge_sort(array, buffer, 0, N);
+    // ---------- ОСВОБОЖДЕНИЕ ПАМЯТИ И ЗАКРЫТИЕ ФАЙЛОВ ----------
+    free(records);
 
-    for (int i = 0; i < N; i++)
-    {
-        printf("%lld %s\n", array[i].key, array[i].value);
-    }
-
-    free(array);
-    free(buffer);
+    fclose(input);
+    fclose(output);
 
     return 0;
 }
