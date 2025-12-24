@@ -1,68 +1,102 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-#define MAX_KEYS 1000001
-#define MAX_LEN 8
+#define MAX_KEY 1000000
 
-// структура узла списка
-struct Node
+typedef struct ListNode
 {
-    char str[MAX_LEN];
-    int next;
-};
+    char text[8];
+    struct ListNode *next;
+} ListNode;
+
+ListNode *list_heads[MAX_KEY + 1];
 
 int main(void)
 {
     FILE *input = fopen("input.txt", "r");
     FILE *output = fopen("output.txt", "w");
 
-    if (!input || !output)
+    // ---------- ЧТЕНИЕ КОЛИЧЕСТВА ЗАПИСЕЙ ----------
+    // В первой строке входного файла записано N — сколько пар (key, string) будет дальше.
+    int record_count;
+    fscanf(input, "%d", &record_count);
+
+    // ---------- ИНИЦИАЛИЗАЦИЯ МАССИВА ГОЛОВ СПИСКОВ ----------
+    // list_heads[key] будет хранить указатель на первый узел списка для этого key.
+    // Пока ничего не считали — все списки пустые, значит головы равны NULL.
+    for (int i = 0; i <= MAX_KEY; i++)
     {
-        return 0;
+        list_heads[i] = NULL;
     }
 
-    int N;
-    fscanf(input, "%d", &N);
-
-    struct Node nodes[N];
-    int head[MAX_KEYS];
-    int tail[MAX_KEYS];
-
-    for (int i = 0; i < MAX_KEYS; i++)
+    // ---------- ЧТЕНИЕ ВХОДНЫХ ПАР И ДОБАВЛЕНИЕ В СПИСКИ ----------
+    // Для каждой пары (key, string):
+    // 1) создаём новый узел
+    // 2) кладём строку в узел
+    // 3) добавляем узел в конец списка list_heads[key]
+    //
+    // Почему "в конец":
+    // чтобы сохранить порядок добавления строк для одинакового key.
+    for (int i = 0; i < record_count; i++)
     {
-        head[i] = -1;
-        tail[i] = -1;
-    }
+        int key;
+        char buffer[8];
 
-    int key;
-    for (int i = 0; i < N; i++)
-    {
-        fscanf(input, "%d %s", &key, nodes[i].str);
+        // Считываем одну запись: число key и строку (до 7 символов)
+        fscanf(input, "%d %s", &key, buffer);
 
-        nodes[i].next = -1;
+        // Создаём новый узел списка в динамической памяти
+        ListNode *new_node = (ListNode *)malloc(sizeof(ListNode));
 
-        if (head[key] == -1)
+        // Копируем строку в поле узла
+        strcpy(new_node->text, buffer);
+
+        // Новый узел пока последний, поэтому next = NULL
+        new_node->next = NULL;
+
+        // Если список для этого key пустой, новый узел становится головой
+        if (list_heads[key] == NULL)
         {
-            head[key] = i;
-            tail[key] = i;
+            list_heads[key] = new_node;
         }
         else
         {
-            nodes[tail[key]].next = i;
-            tail[key] = i;
+            // Иначе идём до последнего элемента списка
+            ListNode *current = list_heads[key];
+
+            while (current->next != NULL)
+            {
+                current = current->next;
+            }
+
+            // Прицепляем новый узел в конец
+            current->next = new_node;
         }
     }
 
-    for (int k = 0; k < MAX_KEYS; k++)
+
+
+    // ---------- ВЫВОД РЕЗУЛЬТАТА В ПОРЯДКЕ КЛЮЧЕЙ ----------
+    // Требуется вывести все записи так, чтобы сначала шли меньшие key, потом большие.
+    // Для каждого key:
+    // 1) берём голову списка list_heads[key]
+    // 2) проходим по списку
+    // 3) печатаем "key string" для каждого узла
+    for (int key = 0; key <= MAX_KEY; key++)
     {
-        int cur = head[k];
-        while (cur != -1)
+        ListNode *current = list_heads[key];
+
+        while (current != NULL)
         {
-            fprintf(output, "%d %s\n", k, nodes[cur].str);
-            cur = nodes[cur].next;
+            fprintf(output, "%d %s\n", key, current->text);
+            current = current->next;
         }
     }
 
+    // ---------- ЗАВЕРШЕНИЕ РАБОТЫ С ФАЙЛАМИ ----------
     fclose(input);
     fclose(output);
+
     return 0;
 }
