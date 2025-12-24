@@ -1,20 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int compare_long_long
+
+
+// ---------- ФУНКЦИЯ СРАВНЕНИЯ ДЛЯ QSORT ----------
+// Сравнивает два int-значения по возрастанию.
+// Возвращает:
+//   -1, если первый меньше второго
+//    1, если первый больше второго
+//    0, если равны
+static int compare_int
 (
     const void *a,
     const void *b
 )
 {
-    long long x = *(const long long *)a;
-    long long y = *(const long long *)b;
+    int first_value = *(const int *)a;
+    int second_value = *(const int *)b;
 
-    if (x < y)
+    if (first_value < second_value)
     {
         return -1;
     }
-    else if (x > y)
+    else if (first_value > second_value)
     {
         return 1;
     }
@@ -24,40 +32,50 @@ int compare_long_long
     }
 }
 
-int main()
+int main(void)
 {
-    int n;
+    // ---------- ЧТЕНИЕ РАЗМЕРА МАССИВА ----------
+    int count_numbers;
 
-    if (scanf("%d", &n) != 1)
+    if (scanf("%d", &count_numbers) != 1)
     {
         return 0;
     }
 
-    long long *array = (long long *)malloc(sizeof(long long) * n);
+    // ---------- ВЫДЕЛЕНИЕ ПАМЯТИ ПОД МАССИВ ----------
+    int *array = (int *)malloc(sizeof(int) * count_numbers);
 
-    for (int i = 0; i < n; i++)
+    // ---------- ЧТЕНИЕ ЭЛЕМЕНТОВ МАССИВА ----------
+    for (int i = 0; i < count_numbers; i++)
     {
-        scanf("%lld", &array[i]);
+        scanf("%d", &array[i]);
     }
 
+    // ---------- СОРТИРОВКА МАССИВА ----------
+    // После сортировки одинаковые значения окажутся рядом,
+    // и дубликаты можно будет легко убрать одним проходом.
     qsort
     (
         array,
-        n,
-        sizeof(long long),
-        compare_long_long
+        count_numbers,
+        sizeof(int),
+        compare_int
     );
 
+    // ---------- ПОДСЧЁТ КОЛИЧЕСТВА УНИКАЛЬНЫХ ЗНАЧЕНИЙ ----------
     int unique_count = 0;
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < count_numbers; i++)
     {
         if (i == 0)
         {
+            // Первый элемент всегда уникальный, потому что сравнивать не с чем
             unique_count++;
         }
         else
         {
+            // Если текущий элемент отличается от предыдущего,
+            // значит началось новое уникальное значение
             if (array[i] != array[i - 1])
             {
                 unique_count++;
@@ -65,23 +83,28 @@ int main()
         }
     }
 
+    // ---------- ВЫВОД КОЛИЧЕСТВА УНИКАЛЬНЫХ ----------
     printf("%d\n", unique_count);
 
-    for (int i = 0; i < n; i++)
+    // ---------- ВЫВОД УНИКАЛЬНЫХ ЗНАЧЕНИЙ ----------
+    // Печатаем первый элемент, а затем печатаем только те,
+    // которые отличаются от предыдущего.
+    for (int i = 0; i < count_numbers; i++)
     {
         if (i == 0)
         {
-            printf("%lld\n", array[i]);
+            printf("%d\n", array[i]);
         }
         else
         {
             if (array[i] != array[i - 1])
             {
-                printf("%lld\n", array[i]);
+                printf("%d\n", array[i]);
             }
         }
     }
 
+    // ---------- ОСВОБОЖДЕНИЕ ПАМЯТИ ----------
     free(array);
 
     return 0;

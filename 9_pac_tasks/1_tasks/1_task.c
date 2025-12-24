@@ -1,16 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-
-
 typedef struct
 {
     int key;
     char val[8];
     int orig_index;
 } Record;
-
-
 
 // ---------- ФУНКЦИЯ СРАВНЕНИЯ ДЛЯ QSORT ----------
 // Сортируем сначала по key по возрастанию.
@@ -30,24 +25,17 @@ static int compare_records(const void *a, const void *b)
 }
 
 
-
 int main(void)
 {
     FILE *input = fopen("input.txt", "r");
     FILE *output = fopen("output.txt", "w");
 
-
-
     // ---------- ЧТЕНИЕ КОЛИЧЕСТВА ЗАПИСЕЙ ----------
     int record_count;
     fscanf(input, "%d", &record_count);
 
-
-
     // ---------- ВЫДЕЛЕНИЕ ПАМЯТИ ПОД МАССИВ ЗАПИСЕЙ ----------
     Record *records = (Record *)malloc(record_count * sizeof(Record));
-
-
 
     // ---------- ЧТЕНИЕ ЗАПИСЕЙ И СОХРАНЕНИЕ ИСХОДНОГО ПОРЯДКА ----------
     for (int i = 0; i < record_count; i++)
@@ -57,20 +45,14 @@ int main(void)
         records[i].orig_index = i;
     }
 
-
-
     // ---------- СОРТИРОВКА ----------
     qsort(records, record_count, sizeof(Record), compare_records);
-
-
 
     // ---------- ВЫВОД ОТСОРТИРОВАННЫХ ДАННЫХ ----------
     for (int i = 0; i < record_count; i++)
     {
         fprintf(output, "%d %s\n", records[i].key, records[i].val);
     }
-
-
 
     // ---------- ОСВОБОЖДЕНИЕ ПАМЯТИ И ЗАКРЫТИЕ ФАЙЛОВ ----------
     free(records);
