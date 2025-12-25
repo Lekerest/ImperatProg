@@ -1,16 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define MAX_KEY 1000000
-
 typedef struct ListNode
 {
     char text[8];
     struct ListNode *next;
 } ListNode;
 
-ListNode *list_heads[MAX_KEY + 1];
+ListNode *list_heads[1000001];
 
 int main(void)
 {
@@ -25,7 +22,7 @@ int main(void)
     // ---------- ИНИЦИАЛИЗАЦИЯ МАССИВА ГОЛОВ СПИСКОВ ----------
     // list_heads[key] будет хранить указатель на первый узел списка для этого key.
     // Пока ничего не считали — все списки пустые, значит головы равны NULL.
-    for (int i = 0; i <= MAX_KEY; i++)
+    for (int i = 0; i <= 1000000; i++)
     {
         list_heads[i] = NULL;
     }
@@ -83,7 +80,7 @@ int main(void)
     // 1) берём голову списка list_heads[key]
     // 2) проходим по списку
     // 3) печатаем "key string" для каждого узла
-    for (int key = 0; key <= MAX_KEY; key++)
+    for (int key = 0; key <= 1000000; key++)
     {
         ListNode *current = list_heads[key];
 

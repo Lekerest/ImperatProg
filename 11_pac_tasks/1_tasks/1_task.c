@@ -1,49 +1,81 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define HT_SIZE 1000003
 
+// ---------- ХЕШ-ФУНКЦИЯ ----------
+// Преобразует целое число в индекс хеш-таблицы.
+// Умножение на константу используется для равномерного распределения значений.
+// Взятие по модулю ограничивает индекс диапазоном 0..1000002.
 unsigned hsh(unsigned x)
 {
-    return (x * 1293921838u) % HT_SIZE;
+    return (x * 1293921838u) % 1000003;
 }
 
 int main(void)
 {
-    FILE *in = fopen("input.txt", "rb");
-    if (!in) return 1;
+    // ---------- ОТКРЫТИЕ ВХОДНОГО И ВЫХОДНОГО ФАЙЛОВ (БИНАРНЫЙ ФОРМАТ) ----------
+    FILE *input = fopen("input.txt", "rb");
+    FILE *output = fopen("output.txt", "wb");
 
+    // ---------- ЧТЕНИЕ КОЛИЧЕСТВА ЧИСЕЛ ----------
     int n;
-    if (fread(&n, sizeof(int), 1, in) != 1) { fclose(in); return 1; }
+    fread(&n, sizeof(int), 1, input);
 
-    int *vals = malloc((size_t)n * sizeof(int));
-    fread(vals, sizeof(int), n, in);
-    fclose(in);
+    // ---------- ЧТЕНИЕ ВХОДНОГО МАССИВА ----------
+    int *vals = malloc(n * sizeof(int));
+    fread(vals, sizeof(int), n, input);
 
-    int *tab = malloc((size_t)HT_SIZE * sizeof(int));
-    unsigned char *used = calloc((size_t)HT_SIZE, 1);
-    int *out = malloc((size_t)n * sizeof(int));
+    // ---------- СОЗДАНИЕ ХЕШ-ТАБЛИЦЫ ----------
+    // tab  — хранит значения
+    // used — показывает, занята ли ячейка
+    int *tab = malloc(1000003 * sizeof(int));
+    unsigned char *used = calloc(1000003, 1);
+
+    // ---------- МАССИВ ДЛЯ РЕЗУЛЬТАТА ----------
+    // В него записываются только первые вхождения значений.
+    int *out = malloc(n * sizeof(int));
     int outc = 0;
 
-    for (int i = 0; i < n; ++i)
+    // ---------- ОСНОВНОЙ ЦИКЛ УДАЛЕНИЯ ДУБЛИКАТОВ ----------
+    // Проходим по массиву слева направо.
+    // Если значение встречается впервые — добавляем его в хеш-таблицу и в результат.
+    for (int i = 0; i < n; i++)
     {
         int v = vals[i];
+
         unsigned p = hsh((unsigned)v);
-        while (used[p] && tab[p] != v) p = (p + 1) % HT_SIZE;
-        if (!used[p]) { used[p] = 1; tab[p] = v; out[outc++] = v; }
+
+        // Разрешение коллизий методом линейного пробирования
+        while (used[p] && tab[p] != v)
+        {
+            p = (p + 1) % 1000003;
+        }
+
+        // Если ячейка была пустой, значит это первое вхождение
+        if (!used[p])
+        {
+            used[p] = 1;
+            tab[p] = v;
+
+            out[outc] = v;
+            outc = outc + 1;
+        }
     }
 
-    FILE *outf = fopen("output.txt", "wb");
-    if (outf)
-    {
-        fwrite(&outc, sizeof(int), 1, outf);
-        fwrite(out, sizeof(int), outc, outf);
-        fclose(outf);
-    }
+    // ---------- ЗАПИСЬ РЕЗУЛЬТАТА В ВЫХОДНОЙ ФАЙЛ ----------
+    // Сначала количество уникальных значений,
+    // затем сами значения в порядке первых вхождений.
+    fwrite(&outc, sizeof(int), 1, output);
+    fwrite(out, sizeof(int), outc, output);
 
+    // ---------- ОСВОБОЖДЕНИЕ ПАМЯТИ И ЗАКРЫТИЕ ФАЙЛОВ ----------
     free(vals);
     free(tab);
     free(used);
     free(out);
+
+    fclose(output);
+    fclose(input);
+
     return 0;
 }

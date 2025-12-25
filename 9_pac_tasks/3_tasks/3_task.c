@@ -1,14 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
-
 // ---------- ФУНКЦИЯ СРАВНЕНИЯ ДЛЯ QSORT ----------
-// Сравнивает два int-значения по возрастанию.
-// Возвращает:
-//   -1, если первый меньше второго
-//    1, если первый больше второго
-//    0, если равны
 static int compare_int
 (
     const void *a,
@@ -34,13 +27,12 @@ static int compare_int
 
 int main(void)
 {
+    FILE *input = fopen("input.txt", "r");
+    FILE *output = fopen("output.txt", "w");
+
     // ---------- ЧТЕНИЕ РАЗМЕРА МАССИВА ----------
     int count_numbers;
-
-    if (scanf("%d", &count_numbers) != 1)
-    {
-        return 0;
-    }
+    fscanf(input, "%d", &count_numbers);
 
     // ---------- ВЫДЕЛЕНИЕ ПАМЯТИ ПОД МАССИВ ----------
     int *array = (int *)malloc(sizeof(int) * count_numbers);
@@ -48,12 +40,10 @@ int main(void)
     // ---------- ЧТЕНИЕ ЭЛЕМЕНТОВ МАССИВА ----------
     for (int i = 0; i < count_numbers; i++)
     {
-        scanf("%d", &array[i]);
+        fscanf(input, "%d", &array[i]);
     }
 
     // ---------- СОРТИРОВКА МАССИВА ----------
-    // После сортировки одинаковые значения окажутся рядом,
-    // и дубликаты можно будет легко убрать одним проходом.
     qsort
     (
         array,
@@ -69,13 +59,10 @@ int main(void)
     {
         if (i == 0)
         {
-            // Первый элемент всегда уникальный, потому что сравнивать не с чем
             unique_count++;
         }
         else
         {
-            // Если текущий элемент отличается от предыдущего,
-            // значит началось новое уникальное значение
             if (array[i] != array[i - 1])
             {
                 unique_count++;
@@ -84,28 +71,29 @@ int main(void)
     }
 
     // ---------- ВЫВОД КОЛИЧЕСТВА УНИКАЛЬНЫХ ----------
-    printf("%d\n", unique_count);
+    fprintf(output, "%d\n", unique_count);
 
     // ---------- ВЫВОД УНИКАЛЬНЫХ ЗНАЧЕНИЙ ----------
-    // Печатаем первый элемент, а затем печатаем только те,
-    // которые отличаются от предыдущего.
     for (int i = 0; i < count_numbers; i++)
     {
         if (i == 0)
         {
-            printf("%d\n", array[i]);
+            fprintf(output, "%d\n", array[i]);
         }
         else
         {
             if (array[i] != array[i - 1])
             {
-                printf("%d\n", array[i]);
+                fprintf(output, "%d\n", array[i]);
             }
         }
     }
 
-    // ---------- ОСВОБОЖДЕНИЕ ПАМЯТИ ----------
+    // ---------- ОСВОБОЖДЕНИЕ ПАМЯТИ И ЗАКРЫТИЕ ФАЙЛОВ ----------
     free(array);
+
+    fclose(input);
+    fclose(output);
 
     return 0;
 }

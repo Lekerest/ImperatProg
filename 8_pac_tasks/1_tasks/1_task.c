@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define MAXN 100000    // Максимальное количество запросов
-#define MAXLEN 100005  // Максимальная длина одной строки
-
 // Функция для копирования строки из source в destination (аналог strcpy, но без string.h)
 void str_copy(char *destination, const char *source)
 {
@@ -32,7 +29,7 @@ int main(void)
     int requestType;     // Тип запроса (0 - создать, 1 - удалить, 2 - вывести, 3 - посчитать символ)
     int stringLength;    // Длина создаваемой строки
     int stringId;        // Идентификатор строки (номер запроса, при котором она была создана)
-    char inputBuffer[MAXLEN]; // Буфер для временного хранения вводимой строки
+    char inputBuffer[100005]; // Буфер для временного хранения вводимой строки
     int createdCount = 0;     // Количество созданных строк (их идентификаторы идут от 0)
     int index;           // Индекс цикла для перебора запросов
     char currentChar;    // Символ, количество вхождений которого нужно посчитать
